@@ -1,0 +1,177 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<title>Truchet</title>
+</head>
+
+
+<style>
+table, th, td {
+	padding: 0px;
+	text-align: center;
+    border: 0px solid black;
+    border-collapse: collapse; 
+}
+table {
+	border: 1px solid black;	
+}
+svg {
+	display: block; 
+	margin: auto ;
+	border: 0px solid black;
+}
+.buttonDiv {
+	display: inline-block;
+	padding: 2px;
+	border: 2px;
+}
+
+.centered {
+	text-align: center;
+}
+
+</style>
+
+
+<script src="js/bldrs.js"></script> <!-- required for callback registration-->
+<script src="js/truchet.js"></script>
+<script>
+$(document).ready(function(){
+	reset();
+});
+
+
+$(document).ready(function(){	
+	$('#ruleBtn').on("click", function(event){
+		truchet.tiles.applyAll();
+		$('#tileBoard').html(truchet.tiles.htmlTable());
+	});
+	$('#clearBtn').on("click", function(event){
+		reset();
+	});
+	$('#randBtn').on("click", function(event){
+		truchet.tiles.randomizeTile();
+		$('#tileBoard').html(truchet.tiles.htmlTable());
+	});
+});
+
+var currentSize = "sm";
+var currentRule = "rotate";
+$(document).ready(function(){
+	$("form input:radio").on('click',function(e){
+		var newRule = $('input[name=rule]:checked').val();
+		var newSize = $('input[name=size]:checked').val();
+		if (currentSize != newSize) {
+			currentSize = newSize;
+			return reset(event);
+		}
+		if (currentRule != newRule) {
+			currentRule = newRule;
+			return fixRule();
+		}		
+	})
+});
+
+function fixRule() {
+	if (currentRule == "none"){
+		truchet.reflect = false;
+		truchet.rotate = false;
+	} else if (currentRule == "diagonal"){
+		truchet.reflect = true;
+		truchet.rotate = false;
+	} else {
+		truchet.reflect = false;
+		truchet.rotate = true;		
+	}
+
+}
+function reset() {
+	if (currentSize == "xs"){
+		truchet.start(90,4);
+	} else if (currentSize =="sm") {
+		truchet.start(60,6);
+	} else if (currentSize == "md"){
+		truchet.start(30,12);
+	} else {
+		truchet.start(15,24);
+	}
+	$('#tileBoard').html(truchet.tiles.htmlTable());
+}
+
+</script>
+
+<body>
+
+<nav class="navbar navbar-default" style="margin-bottom:0px">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="..">
+				<img src="imgs/github_badge1.png" style="max-width:100%;max-height:100%" >
+			</a>
+			<p class="navbar-text navbar-right">
+				<a href=".." class="navbar-link">dmackinnon1.github.io</a>
+			</p>
+		</div>
+		</div>
+</nav>
+
+<div class="container-fluid">
+	<div class='row'>
+	<div class='col-sm-1'></div>
+	<div class='col-sm-10'>
+		<div class="page-header"><h1>Truchet tiles</h1></div> 	
+	</div>
+	<div class='col-sm-1'></div>
+</div>
+
+<div class="centered">
+<div class="buttonDiv">
+<form>
+  <label class="radio-inline">
+  <input type="radio" name="size" value="xs"> extra small<br>
+  </label>
+  <label class="radio-inline">
+  <input type="radio" name="size" value="sm" checked> small<br>
+  </label>
+  <lable class="radio-inline">
+  <input type="radio" class="radio-inline" name="size" value="md"> medium<br>
+  </lable>
+  <label class="radio-inline">
+  <input type="radio" class="radio-inline" name="size" value="large"> large<br>
+  </label>
+</form>
+</div>
+</div>
+<br>
+<div class="centered">
+<div class="buttonDiv">
+<form>
+  <label class="radio-inline">
+  <input type="radio" name="rule" value="none"> no rule<br>
+  </label>
+  <label class="radio-inline">
+  <input type="radio" name="rule" value="diagonal"> diagonal reflection<br>
+  </label>
+  <lable class="radio-inline">
+  <input type="radio" class="radio-inline" name="rule" value="rotate" checked> quad rotation<br>
+  </lable>
+</form>
+</div>
+</div>
+<br>
+<div id="tileBoard"/></div>
+<hr>
+<div class="centered">
+<div class="btn-group btn-group-lg " role="group">
+  <button type="button" id="ruleBtn" class="btn btn-secondary">apply rule</button>
+  <button type="button" id="clearBtn" class="btn btn-secondary">clear</button>
+  <button type="button" id="randBtn" class="btn btn-secondary">random</button>
+</div>
+</div>
+</body>
+</html>
