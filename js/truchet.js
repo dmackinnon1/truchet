@@ -3,6 +3,9 @@ var truchet = {};
 truchet.tiles = null;
 truchet.reflect = false;
 truchet.rotate = true;
+truchet.style="diagonal";
+truchet.border = false;
+truchet.translate = false;
 
 truchet.start = function(size, rows) {
 
@@ -46,7 +49,18 @@ class Tiles {
 		var frame = new Bldr("svg").att("id", this.count + "tile_"+i+"_"+j)
 					.att("data-row", i).att("data-col", j)
 					.att("align", "center").att("width", this.size).att("height", this.size);		
-		var tile = this.tileFill(k);
+		var tile = null;
+		if (truchet.style == "traditional") {
+			tile = this.tileFill(k);
+		} else {
+			tile = this.tileDiag(k);
+		}
+		if (truchet.border) {
+			var border = new Bldr("rect").att("stroke-width",1).att("fill","none");
+			border.att("height", this.size).att("width", this.size).att("stroke","grey")
+				.att("x", 0).att("y",0);
+			frame.elem(border);
+		}
 		tile.att("data-row", i).att("data-col", j);
 		frame.elem(tile);
 		frame.att("onclick","elementClick(event)");
@@ -63,9 +77,13 @@ class Tiles {
 
 	applyRules(i,j){
 		if (truchet.reflect) {
-			if (i != j) {
-				this.tiles[j][i] = (this.tiles[i][j] + 2) % 4;
-			}
+			var x = this.rows -1 -i;
+			var y = this.rows -1 -j;
+			this.tiles[i][y] = (this.tiles[i][j] + 3) % 4;
+			this.tiles[x][j] = (this.tiles[i][j] + 1) % 4;
+			this.tiles[x][y] = (this.tiles[i][j] +2) % 4;
+			return;
+			
 		}
 		if (truchet.rotate) {
 			var x = this.rows -1 -i;
@@ -73,8 +91,19 @@ class Tiles {
 			this.tiles[j][x] = (this.tiles[i][j] + 1) % 4;
 			this.tiles[x][y] = (this.tiles[i][j] + 2) % 4;
 			this.tiles[y][i] = (this.tiles[i][j] + 3) % 4;
-				
-		}	
+			return;	
+		}
+		
+		if (truchet.translate) {
+			var m = Math.ceil(this.rows/2);
+			var x = this.rows -1 - (m-i);
+			var y = this.rows -1 - (m-j);
+			this.tiles[x][j] = (this.tiles[i][j]);
+			this.tiles[i][y] = (this.tiles[i][j]);
+			this.tiles[x][y] = (this.tiles[i][j]);
+			return;		
+		}
+			
 	}
 
 	applyAll() {
@@ -101,6 +130,24 @@ class Tiles {
 			tile.att("points", tr + " " + br + " " + bl);
 		} else {
 			tile.att("points", br + " " + bl + " " + tl);		
+		}
+		return tile;
+	}
+
+	tileDiag(rotation) {
+		var tile = new Bldr("line").att("style","stroke:rgb(0,0,255);stroke-width:3")
+			.att("stroke-linecap","square");
+		var c = this.size;
+		if (rotation % 2 == 0) {
+			tile.att("x1", c);
+			tile.att("y1", 0);
+			tile.att("x2", 0);
+			tile.att("y2",c); 
+		} else {
+			tile.att("x1", 0);
+			tile.att("y1", 0);
+			tile.att("x2", c);
+			tile.att("y2",c);		
 		}
 		return tile;
 	}

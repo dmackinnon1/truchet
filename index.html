@@ -36,8 +36,6 @@ svg {
 }
 
 </style>
-
-
 <script src="js/bldrs.js"></script> <!-- required for callback registration-->
 <script src="js/truchet.js"></script>
 <script>
@@ -45,7 +43,7 @@ $(document).ready(function(){
 	reset();
 });
 
-
+var showGrid = false;
 $(document).ready(function(){	
 	$('#ruleBtn').on("click", function(event){
 		truchet.tiles.applyAll();
@@ -58,6 +56,10 @@ $(document).ready(function(){
 		truchet.tiles.randomizeTile();
 		$('#tileBoard').html(truchet.tiles.htmlTable());
 	});
+	$('#gridBtn').on("click", function(event){
+		truchet.border = !truchet.border;
+		$('#tileBoard').html(truchet.tiles.htmlTable());
+	});
 });
 
 var currentSize = "sm";
@@ -66,6 +68,7 @@ $(document).ready(function(){
 	$("form input:radio").on('click',function(e){
 		var newRule = $('input[name=rule]:checked').val();
 		var newSize = $('input[name=size]:checked').val();
+		var newStyle = $('input[name=style]:checked').val();
 		if (currentSize != newSize) {
 			currentSize = newSize;
 			return reset(event);
@@ -73,7 +76,9 @@ $(document).ready(function(){
 		if (currentRule != newRule) {
 			currentRule = newRule;
 			return fixRule();
-		}		
+		}
+		truchet.style = newStyle;		
+		$('#tileBoard').html(truchet.tiles.htmlTable());
 	})
 });
 
@@ -81,24 +86,29 @@ function fixRule() {
 	if (currentRule == "none"){
 		truchet.reflect = false;
 		truchet.rotate = false;
-	} else if (currentRule == "diagonal"){
+		truchet.translate=false;
+	} else if (currentRule == "reflect"){
 		truchet.reflect = true;
 		truchet.rotate = false;
-	} else {
+		truchet.translate = false;
+	} else if (currentRule == "rotate"){
 		truchet.reflect = false;
-		truchet.rotate = true;		
-	}
+		truchet.rotate = true;	
+		truchet.translate = false;	
+	} 
 
 }
 function reset() {
 	if (currentSize == "xs"){
-		truchet.start(90,4);
-	} else if (currentSize =="sm") {
-		truchet.start(60,6);
-	} else if (currentSize == "md"){
-		truchet.start(30,12);
-	} else {
 		truchet.start(15,24);
+	} else if (currentSize =="sm") {
+		truchet.start(30,12);
+	} else if (currentSize == "md"){
+		truchet.start(60,6);
+	} else if (currentSize =="lg" ){
+		truchet.start(90,4);
+	} else if (currentSize == "xl"){
+		truchet.start(180,2);
 	}
 	$('#tileBoard').html(truchet.tiles.htmlTable());
 }
@@ -130,6 +140,7 @@ function reset() {
 </div>
 
 <div class="centered">
+<div>
 <div class="buttonDiv">
 <form>
   <label class="radio-inline">
@@ -142,7 +153,22 @@ function reset() {
   <input type="radio" class="radio-inline" name="size" value="md"> medium<br>
   </lable>
   <label class="radio-inline">
-  <input type="radio" class="radio-inline" name="size" value="large"> large<br>
+  <input type="radio" class="radio-inline" name="size" value="lg"> large<br>
+  </label>
+  <label class="radio-inline">
+  <input type="radio" class="radio-inline" name="size" value="xl"> extra large<br>
+  </label>
+</form>
+</div>
+</div>
+<div class="centered">
+<div class="buttonDiv">
+<form>
+  <label class="radio-inline">
+  <input type="radio" name="style" value="traditional"> traditional<br>
+  </label>
+  <label class="radio-inline">
+  <input type="radio" name="style" value="diagonal" checked> diagonals<br>
   </label>
 </form>
 </div>
@@ -155,12 +181,18 @@ function reset() {
   <input type="radio" name="rule" value="none"> no rule<br>
   </label>
   <label class="radio-inline">
-  <input type="radio" name="rule" value="diagonal"> diagonal reflection<br>
+  <input type="radio" name="rule" value="reflect"> quad reflection<br>
   </label>
   <lable class="radio-inline">
   <input type="radio" class="radio-inline" name="rule" value="rotate" checked> quad rotation<br>
   </lable>
+  <!--
+  <lable class="radio-inline">
+  <input type="radio" class="radio-inline" name="rule" value="translate"> quad translate<br>
+  </lable>
+  -->
 </form>
+</div>
 </div>
 </div>
 <br>
@@ -171,6 +203,7 @@ function reset() {
   <button type="button" id="ruleBtn" class="btn btn-secondary">apply rule</button>
   <button type="button" id="clearBtn" class="btn btn-secondary">clear</button>
   <button type="button" id="randBtn" class="btn btn-secondary">random</button>
+  <button type="button" id="gridBtn" class="btn btn-secondary">toggle grid</button>
 </div>
 </div>
 </body>
