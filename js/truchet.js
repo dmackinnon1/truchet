@@ -3,7 +3,7 @@ var truchet = {};
 truchet.tiles = null;
 truchet.reflect = false;
 truchet.rotate = true;
-truchet.style="diagonal";
+truchet.style="traditional";
 truchet.border = false;
 truchet.translate = false;
 
@@ -52,8 +52,10 @@ class Tiles {
 		var tile = null;
 		if (truchet.style == "traditional") {
 			tile = this.tileFill(k);
-		} else {
+		} else if (truchet.style == "diagonal") {
 			tile = this.tileDiag(k);
+		} else {
+			tile = this.tileSmith(k);
 		}
 		if (truchet.border) {
 			var border = new Bldr("rect").att("stroke-width",1).att("fill","none");
@@ -132,6 +134,50 @@ class Tiles {
 			tile.att("points", br + " " + bl + " " + tl);		
 		}
 		return tile;
+	}
+
+	tileSmith(rotation) {
+		var tile = new Bldr("path").att("style","stroke:rgb(0,0,255);stroke-width:3")
+			.att("stroke-linecap","square")
+			.att("fill","none");
+		
+		
+		var tile1 = new Bldr("path").att("style","stroke:rgb(0,0,255);stroke-width:3")
+			.att("stroke-linecap","square")
+			.att("fill","none");
+
+		var c = this.size;
+		if (rotation %2 == 0) {
+			var arc ="M " + c/2 + " 0";
+			arc += " A " + c/2 + " " + c/2 + " "; //radii
+			arc += "0 0" ; //rotation
+			arc += "0"; //sweep
+			arc += " " + c + " " + c/2;
+			tile.att("d",arc);
+		
+			var arc1 ="M 0 " + c/2;
+			arc1 += " A " + c/2 + " " + c/2 + " "; //radii
+			arc1 += "0 0" ; //rotation
+			arc1 += "1"; //sweep
+			arc1 += " " + c/2 + " " + c;
+			tile1.att("d", arc1)
+		} else {
+			var arc ="M 0 " + c/2;
+			arc += " A " + c/2 + " " + c/2 + " "; //radii
+			arc += "0 0" ; //rotation
+			arc += "0"; //sweep
+			arc += " " + c/2 + " 0";
+			tile.att("d",arc);
+		
+			var arc1 ="M " + c/2 + " " + c;
+			arc1 += " A " + c/2 + " " + c/2 + " "; //radii
+			arc1 += "0 0" ; //rotation
+			arc1 += "1"; //sweep
+			arc1 += " " + c + " " + c/2;
+			tile1.att("d", arc1)
+		}
+		var group = new Bldr("g").elem(tile).elem(tile1);
+		return group;
 	}
 
 	tileDiag(rotation) {
