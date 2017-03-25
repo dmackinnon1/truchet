@@ -112,9 +112,16 @@ truchet.ruleReflect = function(i,j) {
 	var t = truchet.tiles;
 	var x = t.rows -1 -i;
 	var y = t.rows -1 -j;
-	t.tiles[i][y] = (t.tiles[i][j] + 3) % 4;
-	t.tiles[x][j] = (t.tiles[i][j] + 1) % 4;
-	t.tiles[x][y] = (t.tiles[i][j] +2) % 4;
+	var c = t.tiles[i][j];
+	if (c %2 ==0) {
+		t.tiles[i][y] = (c + 1) % 4;
+		t.tiles[x][j] = (c + 3) % 4;
+		t.tiles[x][y] = (c +2) % 4;
+	} else {
+		t.tiles[i][y] = (c + 3) % 4;
+		t.tiles[x][j] = (c + 1) % 4;
+		t.tiles[x][y] = (c +2) % 4;
+	}		
 	return;	
 };
 
