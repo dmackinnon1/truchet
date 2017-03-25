@@ -69,6 +69,7 @@ $(document).ready(function(){
 		var newRule = $('input[name=rule]:checked').val();
 		var newSize = $('input[name=size]:checked').val();
 		var newStyle = $('input[name=style]:checked').val();
+		
 		if (currentSize != newSize) {
 			currentSize = newSize;
 			return reset(event);
@@ -77,24 +78,24 @@ $(document).ready(function(){
 			currentRule = newRule;
 			return fixRule();
 		}
-		truchet.style = newStyle;		
+		if (newStyle == "traditional"){
+			truchet.tileStyle = truchet.tileTraditional;		
+		} else if (newStyle == "diagonal"){
+			truchet.tileStyle = truchet.tileDiag;
+		} else {
+			truchet.tileStyle = truchet.tileSmith;
+		}
 		$('#tileBoard').html(truchet.tiles.htmlTable());
 	})
 });
 
 function fixRule() {
 	if (currentRule == "none"){
-		truchet.reflect = false;
-		truchet.rotate = false;
-		truchet.translate=false;
+		truchet.rule = truchet.ruleNone;
 	} else if (currentRule == "reflect"){
-		truchet.reflect = true;
-		truchet.rotate = false;
-		truchet.translate = false;
+		truchet.rule = truchet.ruleReflect;
 	} else if (currentRule == "rotate"){
-		truchet.reflect = false;
-		truchet.rotate = true;	
-		truchet.translate = false;	
+		truchet.rule = truchet.ruleRotate;
 	} 
 
 }
@@ -181,11 +182,13 @@ function reset() {
 <div class="buttonDiv">
 <form>
   <label class="radio-inline">
-  <input type="radio" name="rule" value="none"> no rule<br>
+  <input type="radio" name="rule" value="none"> no rule<br> 
   </label>
+  <!--
   <label class="radio-inline">
   <input type="radio" name="rule" value="reflect"> quad reflection<br>
   </label>
+  -->
   <lable class="radio-inline">
   <input type="radio" class="radio-inline" name="rule" value="rotate" checked> quad rotation<br>
   </lable>
@@ -196,6 +199,7 @@ function reset() {
   -->
 </form>
 </div>
+<h3 class="centered"> Click on a tile to rotate it. </h3>
 </div>
 </div>
 <br>
