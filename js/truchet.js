@@ -8,7 +8,7 @@ truchet.start = function(size, rows) {
 	truchet.tiles.init();
 };
 
-truchet.curveAndDiagonal = function(rotation) {
+truchet.curveAndLine = function(rotation) {
 		var tile = new Bldr("line").att("style","stroke:rgb(0,0,0);stroke-width:3")
 			.att("stroke-linecap","square");
 		var c = truchet.tiles.size;
