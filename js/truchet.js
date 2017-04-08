@@ -8,6 +8,169 @@ truchet.start = function(size, rows) {
 	truchet.tiles.init();
 };
 
+truchet.curveAndDiagonal = function(rotation) {
+		var tile = new Bldr("line").att("style","stroke:rgb(0,0,0);stroke-width:3")
+			.att("stroke-linecap","square");
+		var c = truchet.tiles.size;
+		var tl = "0,0";
+		var tr = c +",0";
+		var bl = "0," + c;
+		var br = c + "," + c;
+
+		var tile1 = new Bldr("path").att("style","stroke:rgb(0,0,0);stroke-width:3")
+			.att("stroke-linecap","square")
+			.att("fill","none");
+
+		if (rotation == 0) {
+			tile.att("x1", 0);
+			tile.att("y1", c/2);
+			tile.att("x2", c/2);
+			tile.att("y2",c);
+			
+			var arc ="M " + c/2 + " 0";
+			arc += " A " + c/2 + " " + c/2 + " "; //radii
+			arc += "0 0" ; //rotation
+			arc += "0"; //sweep
+			arc += " " + c + " " + c/2;
+			tile1.att("d",arc);
+		
+		} else if (rotation == 1) {
+			tile.att("x1", c);
+			tile.att("y1", c/2);
+			tile.att("x2", c/2);
+			tile.att("y2",c); 
+
+			var arc ="M 0 " + c/2;
+			arc += " A " + c/2 + " " + c/2 + " "; //radii
+			arc += "0 0" ; //rotation
+			arc += "0"; //sweep
+			arc += " " + c/2 + " 0";
+			tile1.att("d",arc);
+
+		} else if (rotation == 2) {
+			tile.att("x1", c/2);
+			tile.att("y1", 0);
+			tile.att("x2", c);
+			tile.att("y2",c/2);
+			
+			var arc1 ="M 0 " + c/2;
+			arc1 += " A " + c/2 + " " + c/2 + " "; //radii
+			arc1 += "0 0" ; //rotation
+			arc1 += "1"; //sweep
+			arc1 += " " + c/2 + " " + c;
+			tile1.att("d", arc1)
+		
+		} else {
+			tile.att("x1", c/2);
+			tile.att("y1", 0);
+			tile.att("x2", 0);
+			tile.att("y2",c/2); 
+		
+			var arc1 ="M " + c/2 + " " + c;
+			arc1 += " A " + c/2 + " " + c/2 + " "; //radii
+			arc1 += "0 0" ; //rotation
+			arc1 += "1"; //sweep
+			arc1 += " " + c + " " + c/2;
+			tile1.att("d", arc1)
+		}
+		
+		var group = new Bldr("g").elem(tile).elem(tile1);
+		return group;
+
+};
+
+truchet.curveAndSquare = function(rotation) {
+		var tile = new Bldr("line").att("style","stroke:rgb(0,0,0);stroke-width:3")
+			.att("stroke-linecap","square");
+		
+		var tile2 = new Bldr("line").att("style","stroke:rgb(0,0,0);stroke-width:3")
+			.att("stroke-linecap","square");
+		
+		var c = truchet.tiles.size;
+		var tl = "0,0";
+		var tr = c +",0";
+		var bl = "0," + c;
+		var br = c + "," + c;
+
+		var tile1 = new Bldr("path").att("style","stroke:rgb(0,0,0);stroke-width:3")
+			.att("stroke-linecap","square")
+			.att("fill","none");
+
+		if (rotation == 0) {
+			tile.att("x1", 0);
+			tile.att("y1", c/2);
+			tile.att("x2",c/2);
+			tile.att("y2",c/2);
+			
+			tile2.att("x1",c/2);
+			tile2.att("y1",c/2);		
+			tile2.att("x2", c/2);
+			tile2.att("y2",c);
+			
+			var arc ="M " + c/2 + " 0";
+			arc += " A " + c/2 + " " + c/2 + " "; //radii
+			arc += "0 0" ; //rotation
+			arc += "0"; //sweep
+			arc += " " + c + " " + c/2;
+			tile1.att("d",arc);
+		
+		} else if (rotation == 1) {
+			tile.att("x1", c);
+			tile.att("y1", c/2);
+			tile.att("x2",c/2);
+			tile.att("y2",c/2);
+			tile2.att("x1",c/2);
+			tile2.att("y1",c/2);		
+			tile2.att("x2", c/2);
+			tile2.att("y2",c); 
+
+			var arc ="M 0 " + c/2;
+			arc += " A " + c/2 + " " + c/2 + " "; //radii
+			arc += "0 0" ; //rotation
+			arc += "0"; //sweep
+			arc += " " + c/2 + " 0";
+			tile1.att("d",arc);
+
+		} else if (rotation == 2) {
+			tile.att("x1", c/2);
+			tile.att("y1", 0);
+			tile.att("x2",c/2);
+			tile.att("y2",c/2);
+			tile2.att("x1",c/2);
+			tile2.att("y1",c/2);
+			tile2.att("x2", c);
+			tile2.att("y2",c/2);
+			
+			var arc1 ="M 0 " + c/2;
+			arc1 += " A " + c/2 + " " + c/2 + " "; //radii
+			arc1 += "0 0" ; //rotation
+			arc1 += "1"; //sweep
+			arc1 += " " + c/2 + " " + c;
+			tile1.att("d", arc1)
+		
+		} else {
+			tile.att("x1", c/2);
+			tile.att("y1", 0);
+			tile.att("x2",c/2);
+			tile.att("y2",c/2);
+			tile2.att("x1",c/2);
+			tile2.att("y1",c/2);
+			tile2.att("x2", 0);
+			tile2.att("y2",c/2); 
+		
+			var arc1 ="M " + c/2 + " " + c;
+			arc1 += " A " + c/2 + " " + c/2 + " "; //radii
+			arc1 += "0 0" ; //rotation
+			arc1 += "1"; //sweep
+			arc1 += " " + c + " " + c/2;
+			tile1.att("d", arc1)
+		}
+		
+		var group = new Bldr("g").elem(tile).elem(tile1).elem(tile2);
+		return group;
+};
+
+
 truchet.tileTraditional = function(rotation) {
 		var tile = new Bldr("polygon").att("stroke-width",0).att("fill","black");
 		var c = truchet.tiles.size;
@@ -23,10 +186,11 @@ truchet.tileTraditional = function(rotation) {
 		} else if (rotation == 2) {
 			tile.att("points", tr + " " + br + " " + bl);
 		} else {
-			tile.att("points", br + " " + bl + " " + tl);		
+			tile.att("points", br + " " + bl + " " + tl);					
 		}
 		return tile;
 };
+
 
 truchet.tileSmith = function(rotation) {
 		var tile = new Bldr("path").att("style","stroke:rgb(0,0,255);stroke-width:3")

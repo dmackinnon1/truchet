@@ -82,8 +82,10 @@ $(document).ready(function(){
 			truchet.tileStyle = truchet.tileTraditional;		
 		} else if (newStyle == "diagonal"){
 			truchet.tileStyle = truchet.tileDiag;
-		} else {
+		} else if (newStyle == "smith") {
 			truchet.tileStyle = truchet.tileSmith;
+		} else {
+			truchet.tileStyle = truchet.curveAndSquare;
 		}
 		$('#tileBoard').html(truchet.tiles.htmlTable());
 	})
@@ -173,6 +175,9 @@ function reset() {
   </label>
   <label class="radio-inline">
   <input type="radio" name="style" value="smith" > smith<br>
+  </label>
+  <label class="radio-inline">
+  <input type="radio" name="style" value="curveSquare" > curve+square<br>
   </label>
 </form>
 </div>
