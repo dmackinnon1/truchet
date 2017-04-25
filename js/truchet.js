@@ -170,6 +170,70 @@ truchet.curveAndSquare = function(rotation) {
 		return group;
 };
 
+truchet.semiCircle = function(rotation) {		
+		var c = truchet.tiles.size;
+		var tl = "0,0";
+		var tr = c +",0";
+		var bl = "0," + c;
+		var br = c + "," + c;
+
+		var tile = new Bldr("polygon").att("stroke-width",1)
+			.att("stroke","rgb(0,0,0)").att("fill","rgb(0,0,0)");
+		
+		var tile1 = new Bldr("path").att("style","stroke:rgb(0,0,0);stroke-width:3")
+			.att("stroke-linecap","square")
+			.att("fill","rgb(0,0,0)");
+
+		if (rotation == 0) {
+
+			tile.att("points", bl + " " + tl + " " + tr);
+			
+			var arc ="M 0 " + c;
+			arc += " A " + c+ " " + c+ " "; //radii
+			arc += "0 0" ; //rotation
+			arc += "0"; //sweep
+			arc += " " + c+ " 0";
+			tile1.att("d",arc);
+
+					
+		} else if (rotation == 1) {
+			
+			tile.att("points", tl + " " + tr + " " + br);
+			
+			var arc ="M " + "0 0";//var arc ="M " + c/2 + " 0";
+			arc += " A " + c + " " + c + " "; //radii
+			arc += "0 0" ; //rotation
+			arc += "0"; //sweep
+			arc += " " + c +" " + c; //arc += " " + c + " " + c/2;
+			tile1.att("d",arc);
+
+
+		} else if (rotation == 2) {
+
+			tile.att("points", tr + " " + br + " " + bl);
+			
+			var arc1 ="M " + c + " 0";
+			arc1 += " A " + c + " " + c + " "; //radii
+			arc1 += "0 0" ; //rotation
+			arc1 += "0"; //sweep
+			arc1 += " 0 " + c;
+			tile1.att("d", arc1)
+
+		} else {
+
+			tile.att("points", br + " " + bl + " " + tl);					
+			
+			var arc1 ="M  " + c + " " + c;
+			arc1 += " A " + c + " " + c + " "; //radii
+			arc1 += "0 0" ; //rotation
+			arc1 += "0"; //sweep
+			arc1 += " 0 0";
+			tile1.att("d", arc1)
+				}		
+		
+		var group = new Bldr("g").elem(tile).elem(tile1);
+		return group;
+};
 
 truchet.tileTraditional = function(rotation) {
 		var tile = new Bldr("polygon").att("stroke-width",0).att("fill","black");
@@ -324,7 +388,7 @@ class Tiles {
 	}
 	
 	newTruchet(i,j,k) {
-		var frame = new Bldr("svg").att("id", this.count + "tile_"+i+"_"+j)
+		var frame = new Bldr("svg").att("id", "tile_"+i+"_"+j)
 					.att("data-row", i).att("data-col", j)
 					.att("align", "center").att("width", this.size).att("height", this.size);		
 		
@@ -336,7 +400,7 @@ class Tiles {
 				.att("x", 0).att("y",0);
 			frame.elem(border);
 		}
-		tile.att("data-row", i).att("data-col", j);
+		tile.attOnAllElements("data-row", i).attOnAllElements("data-col", j);
 		frame.elem(tile);
 		frame.att("onclick","elementClick(event)");
 		return frame;

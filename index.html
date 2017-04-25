@@ -62,7 +62,7 @@ $(document).ready(function(){
 	});
 });
 
-var currentSize = "sm";
+var currentSize = "md";
 var currentRule = "rotate";
 $(document).ready(function(){
 	$("form input:radio").on('click',function(e){
@@ -86,7 +86,10 @@ $(document).ready(function(){
 			truchet.tileStyle = truchet.tileSmith;
 		} else if (newStyle == "curveSquare") {
 			truchet.tileStyle = truchet.curveAndSquare;
-		} else {
+		} else if (newStyle =="semiCircle"){
+			truchet.tileStyle = truchet.semiCircle;
+		}
+		else {
 			truchet.tileStyle = truchet.curveAndLine;
 		}
 		$('#tileBoard').html(truchet.tiles.htmlTable());
@@ -152,10 +155,10 @@ function reset() {
   <input type="radio" name="size" value="xs"> extra small<br>
   </label>
   <label class="radio-inline">
-  <input type="radio" name="size" value="sm" checked> small<br>
+  <input type="radio" name="size" value="sm"> small<br>
   </label>
   <lable class="radio-inline">
-  <input type="radio" class="radio-inline" name="size" value="md"> medium<br>
+  <input type="radio" class="radio-inline" name="size" value="md" checked> medium<br>
   </lable>
   <label class="radio-inline">
   <input type="radio" class="radio-inline" name="size" value="lg"> large<br>
@@ -183,6 +186,9 @@ function reset() {
   </label>
   <label class="radio-inline">
   <input type="radio" name="style" value="curveLine" > curve+line<br>
+  </label>
+  <label class="radio-inline">
+  <input type="radio" name="style" value="semiCircle" > semi circle<br>
   </label>
 </form>
 </div>

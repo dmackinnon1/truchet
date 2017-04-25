@@ -39,6 +39,15 @@ class Bldr {
 		s += "</" + this.name + ">";
 		return s;
 	}
+
+	attOnAllElements(name, value) {
+		this.att(name, value);
+		
+		for (var i = 0; i < this.elements.length; i++){
+			this.elements[i].att(name,value);
+		}
+		return this;
+	}
 };
 
 class Attribute {
