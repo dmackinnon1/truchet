@@ -176,11 +176,11 @@ truchet.semiCircle = function(rotation) {
 		var tr = c +",0";
 		var bl = "0," + c;
 		var br = c + "," + c;
-
+		var f = 1; //may be used to alter curvature. 1 = circle
 		var tile = new Bldr("polygon").att("stroke-width",1)
 			.att("stroke","rgb(0,0,0)").att("fill","rgb(0,0,0)");
 		
-		var tile1 = new Bldr("path").att("style","stroke:rgb(0,0,0);stroke-width:3")
+		var tile1 = new Bldr("path").att("style","stroke:rgb(0,0,0);stroke-width:0")
 			.att("stroke-linecap","square")
 			.att("fill","rgb(0,0,0)");
 
@@ -189,7 +189,7 @@ truchet.semiCircle = function(rotation) {
 			tile.att("points", bl + " " + tl + " " + tr);
 			
 			var arc ="M 0 " + c;
-			arc += " A " + c+ " " + c+ " "; //radii
+			arc += " A " + c*f + " " + c*f + " "; //radii
 			arc += "0 0" ; //rotation
 			arc += "0"; //sweep
 			arc += " " + c+ " 0";
@@ -201,7 +201,7 @@ truchet.semiCircle = function(rotation) {
 			tile.att("points", tl + " " + tr + " " + br);
 			
 			var arc ="M " + "0 0";//var arc ="M " + c/2 + " 0";
-			arc += " A " + c + " " + c + " "; //radii
+			arc += " A " + c*f + " " + c*f + " "; //radii
 			arc += "0 0" ; //rotation
 			arc += "0"; //sweep
 			arc += " " + c +" " + c; //arc += " " + c + " " + c/2;
@@ -213,7 +213,7 @@ truchet.semiCircle = function(rotation) {
 			tile.att("points", tr + " " + br + " " + bl);
 			
 			var arc1 ="M " + c + " 0";
-			arc1 += " A " + c + " " + c + " "; //radii
+			arc1 += " A " + c*f + " " + c*f + " "; //radii
 			arc1 += "0 0" ; //rotation
 			arc1 += "0"; //sweep
 			arc1 += " 0 " + c;
@@ -224,7 +224,7 @@ truchet.semiCircle = function(rotation) {
 			tile.att("points", br + " " + bl + " " + tl);					
 			
 			var arc1 ="M  " + c + " " + c;
-			arc1 += " A " + c + " " + c + " "; //radii
+			arc1 += " A " + c*f + " " + c*f + " "; //radii
 			arc1 += "0 0" ; //rotation
 			arc1 += "0"; //sweep
 			arc1 += " 0 0";
