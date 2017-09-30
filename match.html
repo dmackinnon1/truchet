@@ -1,0 +1,181 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<title>Truchet</title>
+</head>
+
+
+<style>
+table, th, td {
+	padding: 0px;
+	text-align: center;
+    border: 0px solid black;
+    border-collapse: collapse; 
+}
+table {
+	border: 1px solid black;	
+}
+svg {
+	display: block; 
+	margin: auto ;
+	border: 0px solid black;
+}
+.buttonDiv {
+	display: inline-block;
+	padding: 2px;
+	border: 2px;
+}
+
+.centered {
+	text-align: center;
+}
+
+</style>
+<script src="js/bldrs.js"></script> <!-- required for callback registration-->
+<script src="js/evnts.js"></script> <!-- required for callback registration-->
+<script src="js/truchet.js"></script>
+<script>
+//initialize target
+var tilesToMatch;
+var count = 0;
+var remainingDistance = 0;
+var initialDistance = 0;
+var puzzleType = "easy";
+function reset() {	
+	truchet.tileStyle = truchet.tileTraditional;	
+	truchet.rule = truchet.ruleRotate;
+	switch(puzzleType) {
+		case "easy":
+			truchet.start(180,2);	
+			tilesToMatch = new Tiles(140,2,true);
+			break;
+		case "tricky":
+			truchet.start(90,4);	
+			tilesToMatch = new Tiles(60,4,true);
+			break;
+		case "trickier":
+			truchet.start(60,6);	
+			tilesToMatch = new Tiles(40,6,true);
+			break;
+	}
+	tilesToMatch.init();	
+	for (var i=0; i<100; i++){
+		tilesToMatch.randomizeTile();
+		tilesToMatch.randomizeTile();
+	}
+	tilesToMatch.applyAll();
+	truchet.rule = truchet.ruleNone;
+	initialDistance = truchet.tiles.distance(tilesToMatch);
+	count = 0;
+	remainingDistance = 0; 
+	$('#distanceLabel').html("<h4>Match the tiles to the pattern below in " + initialDistance + " moves.</h4>");
+	$('#tileBoard').html(truchet.tiles.htmlTable());
+	$('#tilesToMatch').html(tilesToMatch.htmlTable());
+	evnts.fireEvent("refresh");
+}
+
+$(document).ready(function(){
+	evnts.addCallback("refresh", function() {
+		var d = truchet.tiles.distance(tilesToMatch);
+		var message = "Success!";
+		if (d !== 0) {
+			message = " you have at least " + d + " to go.";
+		} else {
+			truchet.tiles.static = true;
+			var delta = count - initialDistance;
+			if (delta >0) {
+				message += " You used " + delta + " moves more than needed.";
+			} 
+		}
+		$('#counterLabel').html("<h4> You have made " + count + " moves. " + message + "</h4>");
+		count++;
+	});
+	reset();
+});
+
+function setButtons() {
+	$(".btn-primary").addClass("btn-secondary");
+	$(".btn-primary").removeClass("btn-primary");
+	$("#" + puzzleType).addClass("btn-primary");
+}
+
+$(document).ready(function(){	
+	$('.puzzleTypeBtn').on("click", function(event){
+		puzzleType = event.currentTarget.id;
+		setButtons();
+		reset();
+	});
+});
+
+</script>
+
+<body>
+
+<nav class="navbar navbar-default" style="margin-bottom:0px">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="..">
+				<img src="imgs/github_badge1.png" style="max-width:100%;max-height:100%" >
+			</a>
+			<p class="navbar-text navbar-right">
+				<a href=".." class="navbar-link">dmackinnon1.github.io</a>
+			</p>
+		</div>
+		</div>
+</nav>
+
+<div class="container-fluid">
+	<div class='row'>
+	<div class='col-sm-1'></div>
+	<div class='col-sm-10'>
+	<div class="page-header">
+		<h1>Truchet tiles
+				<div class="btn-group btn-group-md " role="group">
+					<a class="btn btn-primary" href="./match.html">Puzzles</a>
+					<a class="btn btn-default" href=".">Explorer</a>
+				</div>
+		</h1>
+	</div> 		
+	<div class="media">
+  	<a class="media-left media-middle" href="#">
+    	<img class="media-object" src="imgs/truchet.png" alt="Truchet" width="150" height="150">
+ 	 </a>
+  	<div class="media-body">
+    <h4 class="media-heading">Truchet Puzzles</h4>
+    The tiles on the larger square below can be rotated by clicking on them. Your goal is to make the pattern on the larger square match the pattern on the smaller square, using the smallest possible
+    number of moves. Get a new puzzle or change the difficulty level by clicking on one of the three
+    buttons below.
+ 	</div>
+	</div>
+	<br>
+	<hr><br>
+
+	<div class="centered">
+	<div class="btn-group btn-group-lg " role="group"> 
+  	<button type="button" id="easy" class="puzzleTypeBtn btn btn-primary">easy</button>
+  	<button type="button" id="tricky" class="puzzleTypeBtn btn btn-secondary">tricky</button>
+  	<button type="button" id="trickier" class="puzzleTypeBtn btn btn-secondary">trickier</button>
+ 	</div>
+	</div>
+	<br>
+
+	<div id="distanceLabel" class="centered"></div>
+	<div id="counterLabel" class="centered"></div>
+	<hr>
+	<div id="tileBoard"/></div>	
+	<hr>
+	<div id="tilesToMatch"/></div>
+	<br>
+	<hr>
+</div>
+	<div class='col-sm-1'></div>
+	</div>
+</div>
+
+</body>
+</html>

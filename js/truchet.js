@@ -8,10 +8,10 @@ truchet.start = function(size, rows) {
 	truchet.tiles.init();
 };
 
-truchet.curveAndLine = function(rotation) {
+truchet.curveAndLine = function(rotation, t) {
 		var tile = new Bldr("line").att("style","stroke:rgb(0,0,0);stroke-width:3")
 			.att("stroke-linecap","square");
-		var c = truchet.tiles.size;
+		var c = t.size;
 		var tl = "0,0";
 		var tr = c +",0";
 		var bl = "0," + c;
@@ -79,14 +79,14 @@ truchet.curveAndLine = function(rotation) {
 
 };
 
-truchet.curveAndSquare = function(rotation) {
+truchet.curveAndSquare = function(rotation, t) {
 		var tile = new Bldr("line").att("style","stroke:rgb(0,0,0);stroke-width:3")
 			.att("stroke-linecap","square");
 		
 		var tile2 = new Bldr("line").att("style","stroke:rgb(0,0,0);stroke-width:3")
 			.att("stroke-linecap","square");
 		
-		var c = truchet.tiles.size;
+		var c = t.size;
 		var tl = "0,0";
 		var tr = c +",0";
 		var bl = "0," + c;
@@ -170,8 +170,8 @@ truchet.curveAndSquare = function(rotation) {
 		return group;
 };
 
-truchet.semiCircle = function(rotation) {		
-		var c = truchet.tiles.size;
+truchet.semiCircle = function(rotation, t) {		
+		var c = t.size;
 		var tl = "0,0";
 		var tr = c +",0";
 		var bl = "0," + c;
@@ -235,9 +235,9 @@ truchet.semiCircle = function(rotation) {
 		return group;
 };
 
-truchet.tileTraditional = function(rotation) {
+truchet.tileTraditional = function(rotation, t) {
 		var tile = new Bldr("polygon").att("stroke-width",0).att("fill","black");
-		var c = truchet.tiles.size;
+		var c = t.size;
 		var tl = "0,0";
 		var tr = c +",0";
 		var bl = "0," + c;
@@ -256,7 +256,7 @@ truchet.tileTraditional = function(rotation) {
 };
 
 
-truchet.tileSmith = function(rotation) {
+truchet.tileSmith = function(rotation, t) {
 		var tile = new Bldr("path").att("style","stroke:rgb(0,0,255);stroke-width:3")
 			.att("stroke-linecap","square")
 			.att("fill","none");
@@ -266,7 +266,7 @@ truchet.tileSmith = function(rotation) {
 			.att("stroke-linecap","square")
 			.att("fill","none");
 
-		var c = truchet.tiles.size;
+		var c = t.size;
 		if (rotation %2 == 0) {
 			var arc ="M " + c/2 + " 0";
 			arc += " A " + c/2 + " " + c/2 + " "; //radii
@@ -301,10 +301,10 @@ truchet.tileSmith = function(rotation) {
 };
 
 
-truchet.tileDiag = function(rotation) {
+truchet.tileDiag = function(rotation,t) {
 		var tile = new Bldr("line").att("style","stroke:rgb(0,0,255);stroke-width:3")
 			.att("stroke-linecap","square");
-		var c = truchet.tiles.size;
+		var c = t.size;
 		if (rotation % 2 == 0) {
 			tile.att("x1", c);
 			tile.att("y1", 0);
@@ -322,12 +322,11 @@ truchet.tileDiag = function(rotation) {
 truchet.tileStyle = truchet.tileTraditional;
 
 
-truchet.ruleNone = function(i,j) {
+truchet.ruleNone = function(i,j, t) {
 	//do nothing
 };
 
-truchet.ruleRotate = function(i,j) {
-	var t = truchet.tiles;
+truchet.ruleRotate = function(i,j,t) {
 	var x = t.rows -1 -i;
 	var y = t.rows -1 -j;
 	t.tiles[j][x] = (t.tiles[i][j] + 1) % 4;
@@ -336,8 +335,7 @@ truchet.ruleRotate = function(i,j) {
 	return;	
 };
 
-truchet.ruleReflect = function(i,j) {
-	var t = truchet.tiles;
+truchet.ruleReflect = function(i,j,t) {
 	var x = t.rows -1 -i;
 	var y = t.rows -1 -j;
 	var c = t.tiles[i][j];
@@ -357,11 +355,16 @@ truchet.rule = truchet.ruleRotate;
 
 class Tiles {
 
-	constructor(size, rows) {
+	constructor(size, rows, isStatic) {
 		this.size = size;
 		this.rows = rows;
 		this.cols = rows;
 		this.tiles = [];
+		if (isStatic === true) { //maybe better pattern for optional param
+			this.static = true;
+		} else {
+			this.static =false;
+		}
 	}
 
 	init() {
@@ -373,6 +376,23 @@ class Tiles {
 		}	
 	}
 	
+	distance(another) {
+		if (another.rows !== this.rows && another.cols !== this.cols) {
+			console.log("programming error - comparing incompatable tiles");
+			return;
+		}
+		var total = 0;
+		for (var i = 0; i < this.rows ;i++){
+			for (var j = 0; j < this.cols ; j++) {
+				var a = this.tiles[i][j];
+				var b = another.tiles[i][j];
+				if (a<=b) total += b-a;
+				else total += (4-a)+b;
+			}
+		}
+		return total;
+	}
+
 	htmlTable() {
 		var html = new Bldr("table").att("align", "center"); 
 		for (var i = 0; i < this.rows; i++){
@@ -392,7 +412,7 @@ class Tiles {
 					.att("data-row", i).att("data-col", j)
 					.att("align", "center").att("width", this.size).att("height", this.size);		
 		
-		var tile = truchet.tileStyle(k);
+		var tile = truchet.tileStyle(k, this);
 		
 		if (truchet.border) {
 			var border = new Bldr("rect").att("stroke-width",1).att("fill","none");
@@ -402,7 +422,9 @@ class Tiles {
 		}
 		tile.attOnAllElements("data-row", i).attOnAllElements("data-col", j);
 		frame.elem(tile);
-		frame.att("onclick","elementClick(event)");
+		if (!this.static){
+			frame.att("onclick","elementClick(event)");
+		}
 		return frame;
 	}
 
@@ -415,7 +437,7 @@ class Tiles {
 	}
 
 	applyRules(i,j){
-		truchet.rule(i,j);
+		truchet.rule(i,j,this);
 			
 	}
 
@@ -447,5 +469,6 @@ function elementClick(event) {
 	var j = parseInt(event.target.getAttribute("data-col"));	
 	truchet.tiles.rotate(i,j);
 	truchet.tiles.applyRules(i,j);
+	evnts.fireEvent("refresh");
 	$('#tileBoard').html(truchet.tiles.htmlTable());
 };
