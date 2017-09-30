@@ -51,15 +51,15 @@ function reset() {
 	truchet.rule = truchet.ruleRotate;
 	switch(puzzleType) {
 		case "easy":
-			truchet.start(180,2);	
-			tilesToMatch = new Tiles(140,2,true);
+			truchet.start(120,2);	
+			tilesToMatch = new Tiles(120,2,true);
 			break;
 		case "tricky":
-			truchet.start(90,4);	
+			truchet.start(60,4);	
 			tilesToMatch = new Tiles(60,4,true);
 			break;
 		case "trickier":
-			truchet.start(60,6);	
+			truchet.start(40,6);	
 			tilesToMatch = new Tiles(40,6,true);
 			break;
 	}
@@ -147,8 +147,7 @@ $(document).ready(function(){
  	 </a>
   	<div class="media-body">
     <h4 class="media-heading">Truchet Puzzles</h4>
-    The tiles on the larger square below can be rotated by clicking on them. Your goal is to make the pattern on the larger square match the pattern on the smaller square, using the smallest possible
-    number of moves. Get a new puzzle or change the difficulty level by clicking on one of the three
+    The tiles on the first square below (left or top) can be rotated by clicking on them. Your goal is to make the pattern on the first square match the pattern on the second square, using the smallest possible number of moves. Get a new puzzle or change the difficulty level by clicking on one of the three
     buttons below.
  	</div>
 	</div>
@@ -163,19 +162,28 @@ $(document).ready(function(){
  	</div>
 	</div>
 	<br>
-
 	<div id="distanceLabel" class="centered"></div>
 	<div id="counterLabel" class="centered"></div>
 	<hr>
-	<div id="tileBoard"/></div>	
-	<hr>
-	<div id="tilesToMatch"/></div>
-	<br>
-	<hr>
+
 </div>
 	<div class='col-sm-1'></div>
-	</div>
 </div>
 
+
+	<div class='row'>
+	<div class='col-sm-3'></div>
+	<div class='col-sm-3'>
+		<div id="tileBoard"/></div>	
+		<hr>
+	</div>
+	<!--<div class='col-sm-2'></div>-->	
+	<div class='col-sm-3'>
+		<div id="tilesToMatch"/></div>
+		<hr>
+	</div>	
+	<div class='col-sm-3'></div>
+	</div>
+	</div>
 </body>
 </html>
