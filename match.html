@@ -83,9 +83,7 @@ $(document).ready(function(){
 	evnts.addCallback("refresh", function() {
 		var d = truchet.tiles.distance(tilesToMatch);
 		var message = "Success!";
-		if (d !== 0) {
-			message = " you have at least " + d + " to go.";
-		} else {
+		if (d === 0) {
 			truchet.tiles.static = true;
 			var delta = count - initialDistance;
 			if (delta >0) {
