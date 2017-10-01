@@ -101,6 +101,9 @@ function setButtons() {
 	$(".btn-primary").addClass("btn-secondary");
 	$(".btn-primary").removeClass("btn-primary");
 	$("#" + puzzleType).addClass("btn-primary");
+	$("#" + puzzleType).removeClass("btn-secondary");
+	$("#btnCurrentPage").addClass("btn-primary");
+
 }
 
 $(document).ready(function(){	
@@ -135,7 +138,7 @@ $(document).ready(function(){
 	<div class="page-header">
 		<h1>Truchet tiles
 				<div class="btn-group btn-group-md " role="group">
-					<a class="btn btn-primary" href="./match.html">Puzzles</a>
+					<a class="btn btn-primary" id="btnCurrentPage" href="./match.html">Puzzles</a>
 					<a class="btn btn-default" href=".">Explorer</a>
 				</div>
 		</h1>
