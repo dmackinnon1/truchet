@@ -1,0 +1,208 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<title>Truchet</title>
+</head>
+
+
+<style>
+table, th, td {
+	padding: 0px;
+	text-align: center;
+    border: 0px solid black;
+    border-collapse: collapse; 
+}
+table {
+	border: 1px solid black;	
+}
+svg {
+	display: block; 
+	margin: auto ;
+	border: 0px solid black;
+}
+.buttonDiv {
+	display: inline-block;
+	padding: 2px;
+	border: 2px;
+}
+
+.centered {
+	text-align: center;
+}
+
+</style>
+<script src="js/bldrs.js"></script> <!-- required for callback registration-->
+<script src="js/evnts.js"></script>
+<script src="js/truchet.js"></script>
+<script>
+var style = truchet.tileTraditional;
+
+var showGrid = false;
+$(document).ready(function(){	
+	$('#clearBtn').on("click", function(event){
+		reset(true);
+	});
+	$('#randBtn').on("click", function(event){
+		truchet.tiles.randomizeTile();
+		$('#tileBoard').html(truchet.tiles.htmlTable());
+	});
+	$('#gridBtn').on("click", function(event){
+		truchet.border = !truchet.border;
+		$('#tileBoard').html(truchet.tiles.htmlTable());
+	});
+	$('#genButton').on("click", function(event){
+		reset();
+	});
+	$('#tradTile').on("click", function(event){
+		style = truchet.tileTraditional;
+		$(".tileButton").removeClass("btn-primary");
+		$(".tileButton").addClass("btn-secondary");
+		$('#tradTile').addClass("btn-primary")
+		reset();
+	});
+	$('#smithTile').on("click", function(event){
+		style = truchet.tileSmith;
+		$(".tileButton").removeClass("btn-primary");
+		$(".tileButton").addClass("btn-secondary");
+		$('#smithTile').addClass("btn-primary")
+		reset();
+	});
+	$('#roundTile').on("click", function(event){
+		style = truchet.semiCircle;
+		$(".tileButton").removeClass("btn-primary");
+		$(".tileButton").addClass("btn-secondary");
+		$('#roundTile').addClass("btn-primary")
+		reset();
+	});
+	$('#curveSquareTile').on("click", function(event){
+		style = truchet.curveAndSquare;
+		$(".tileButton").removeClass("btn-primary");
+		$(".tileButton").addClass("btn-secondary");
+		$('#curveSquareTile').addClass("btn-primary")
+		reset();
+	});
+});
+
+$(document).ready(function(){
+	reset();
+});
+
+//externalize the rows and cols so we can compare with prev.
+var rows = 0;
+var cols = 0;
+function reset(hard){
+
+	var nRows = parseInt($('#rowInput').val());
+	var nCols = parseInt($('#colInput').val());
+	var size = parseInt($('#sizeInput').val());
+	
+	if ((rows !== nRows) || (cols !== nCols)||hard){
+		rows = nRows;
+		cols = nCols;
+		truchet.tiles = new Tiles(size,rows);
+		truchet.rule = truchet.ruleNone;
+		truchet.tiles.cols = cols;
+		truchet.tiles.init();	
+	}
+	truchet.tiles.size = size;
+	truchet.tileStyle = style;
+	$('#tileBoard').html(truchet.tiles.htmlTable());
+}
+</script>
+
+<body>
+<nav class="navbar navbar-default" style="margin-bottom:0px">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="..">
+				<img src="imgs/github_badge1.png" style="max-width:100%;max-height:100%" >
+			</a>
+			<p class="navbar-text navbar-right">
+				<a href=".." class="navbar-link">dmackinnon1.github.io</a>
+			</p>
+		</div>
+	</div>
+</nav>
+
+<div class="container-fluid">
+
+<div class='row'>
+	<div class='col-sm-1'></div>
+	<div class='col-sm-10'>
+		<div class="page-header">
+		<h1>Truchet tiles
+				<div class="btn-group btn-group-md " role="group">
+					<a class="btn btn-default" href="./match.html">Puzzles</a>
+					<a class="btn btn-default" href=".">Explorer</a>
+					<a class="btn btn-primary" href="./gen.html">Generator</a>
+				</div>
+		</h1>
+		</div> 		
+	<div class="media">
+  	<a class="media-left media-middle" href="#">
+    	<img class="media-object" src="imgs/truchet2.png" alt="Truchet" width="150" height="150">
+ 	 </a>
+  	<div class="media-body">
+    <h4 class="media-heading">Truchet Pattern Generator</h4>
+    Choose the dimensions of the Truchet pattern that you would like to create, and click
+    the 'Generate' button. Click on the tiles to rotate them. The same set of rotations
+    can be viewed in different styles of tiles.
+ 	</div>
+	</div>
+	<br>
+	<hr>
+	<div class="centered">
+		<div> 
+			number of rows: <input id="rowInput" type="number" min="1" step="1" value="3"/> 
+		</div>
+		<br>
+		<div>
+			number of columns: <input id="colInput" type="number" min="1" step="1" value="6"/> 
+		</div>
+		<br>
+		<div>
+			size: <input id="sizeInput" type="number" min="10" step="10" value="40"/> 
+		</div>
+		<br>
+		<div class="btn-group btn-group-md " role="group">
+  			<button type="button" id="genButton" class="btn btn-success">Generate</button>
+		</div>
+	</div>
+	<br>
+	<hr>
+	<div class="centered">
+		<div class="btn-group btn-group-lg " role="group">
+  			<button type="button" id="tradTile" class="btn btn-primary tileButton">
+  				traditional</button>
+  			<button type="button" id="smithTile" class="btn btn-secondary tileButton">
+  				smith</button>
+  			<button type="button" id="roundTile" class="btn btn-secondary tileButton">
+  				rounded</button>
+  			<button type="button" id="curveSquareTile" class="btn btn-secondary tileButton">
+  				curve + square</button>
+		</div>
+	</div>
+	<h3 class="centered"> Click on a tile to rotate it. </h3>
+	<br>
+	<div id="tileBoard"/></div>
+	<hr>
+	<div class="centered">
+		<div class="btn-group btn-group-lg " role="group">
+  			<button type="button" id="clearBtn" class="btn btn-secondary">clear</button>
+  			<button type="button" id="randBtn" class="btn btn-secondary">random</button>
+  			<button type="button" id="gridBtn" class="btn btn-secondary">toggle grid</button>
+		</div>
+	</div>
+	<br>
+	<br>
+</div>
+<div class='col-sm-1'></div>
+</div>
+</div>
+</body>
+</html>
