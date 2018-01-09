@@ -89,9 +89,10 @@ $(document).ready(function(){
 			truchet.tileStyle = truchet.curveAndSquare;
 		} else if (newStyle =="semiCircle"){
 			truchet.tileStyle = truchet.semiCircle;
-		}
-		else {
+		} else if (newStyle == "curveLine"){
 			truchet.tileStyle = truchet.curveAndLine;
+		} else {
+			truchet.tileStyle = truchet.circleEdge;
 		}
 		$('#tileBoard').html(truchet.tiles.htmlTable());
 	})
@@ -207,6 +208,9 @@ function reset() {
   </label>
   <label class="radio-inline">
   <input type="radio" name="style" value="semiCircle" > semi circle<br>
+  </label>
+   <label class="radio-inline">
+  <input type="radio" name="style" value="circleEdge" > semi circle edge<br>
   </label>
 </form>
 </div>
