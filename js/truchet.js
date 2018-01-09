@@ -235,6 +235,50 @@ truchet.semiCircle = function(rotation, t) {
 		return group;
 };
 
+truchet.circleEdge = function(rotation, t) {		
+		var c = t.size;		
+		var zero = 0;
+		var tl = zero + "," + zero;
+		var tr = "" + c +"," + zero;
+		var bl = "" + zero + "," + c;
+		var br = c + "," + c;
+		var f = 1; //may be used to alter curvature. 1 = circle
+		var tile1 = new Bldr("path").att("style","stroke:rgb(0,0,0);stroke-width:0.5;fill:none")
+			.att("stroke-linecap","round");
+		if (rotation == 0) {
+			var arc ="M 0 " + c;
+			arc += " A " + c*f + " " + c*f + " "; //radii
+			arc += "0 0" ; //rotation
+			arc += "0"; //sweep
+			arc += " " + c + " 0";
+			tile1.att("d",arc);
+		} else if (rotation == 1) {
+			var arc ="M " + "0 0";//var arc ="M " + c/2 + " 0";
+			arc += " A " + c*f + " " + c*f + " "; //radii
+			arc += "0 0" ; //rotation
+			arc += "0"; //sweep
+			arc += " " + c +" " + c; //arc += " " + c + " " + c/2;
+			tile1.att("d",arc);
+		} else if (rotation == 2) {
+			var arc1 ="M " + c + " 0";
+			arc1 += " A " + c*f + " " + c*f + " "; //radii
+			arc1 += "0 0" ; //rotation
+			arc1 += "0"; //sweep
+			arc1 += " 0 " + c;
+			tile1.att("d", arc1)
+		} else {
+			var arc1 ="M  " + c + " " + c;
+			arc1 += " A " + c*f + " " + c*f + " "; //radii
+			arc1 += "0 0" ; //rotation
+			arc1 += "0"; //sweep
+			arc1 += " 0 0";
+			tile1.att("d", arc1)
+		}				
+		var group = new Bldr("g").elem(tile1);
+		return group;
+};
+
+
 truchet.tileTraditional = function(rotation, t) {
 		var tile = new Bldr("polygon").att("stroke-width",0).att("fill","black");
 		var c = t.size;
